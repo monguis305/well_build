@@ -19,18 +19,12 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install pyinstaller
-          pip install pandas numpy matplotlib scipy Pillow python-pptx openpyxl
-          pip install llama-cpp-python --config-settings=cmake.args="-DLLAMA_OPENBLAS=on"
+          pip install pyinstaller pandas numpy matplotlib scipy Pillow python-pptx openpyxl
+          pip install llama-cpp-python
         shell: cmd
         
       - name: Build with PyInstaller
-        run: |
-          pyinstaller --onefile --windowed `
-            --name CrabAssistant `
-            --collect-all llama_cpp `
-            --hidden-import llama_cpp `
-            crab_assistant.py
+        run: pyinstaller --onefile --windowed --name CrabAssistant --collect-all llama_cpp --hidden-import llama_cpp crab_assistant.py
         shell: cmd
         
       - name: Upload artifact
