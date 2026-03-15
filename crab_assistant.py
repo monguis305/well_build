@@ -887,7 +887,7 @@ class CrabAssistant:
 
         # Пути к файлам
         self.base_path = os.path.dirname(os.path.abspath(__file__))
-        self.model_path = None  # Больше нет жестко заданного пути
+        self.model_path = None
         self.facts_path = os.path.join(self.base_path, "facts.xlsx")
         self.logo_path = os.path.join(self.base_path, "logo.png")
         self.crab_paths = {
@@ -895,9 +895,15 @@ class CrabAssistant:
             'ready': os.path.join(self.base_path, "crab2.png"),
             'fact': os.path.join(self.base_path, "crab4.png")
         }
-        self.history_path = os.path.join(self.base_path, "chats_history.json")
-        self.settings_path = os.path.join(self.base_path, "settings.json")
-        self.model_config_path = os.path.join(self.base_path, "model_config.json")
+        
+        # Папка для данных в профиле пользователя (здесь будут JSON файлы)
+        self.data_dir = os.path.join(os.environ['USERPROFILE'], 'CrabAssistantData')
+        if not os.path.exists(self.data_dir):
+            os.makedirs(self.data_dir)
+        
+        self.history_path = os.path.join(self.data_dir, "chats_history.json")
+        self.settings_path = os.path.join(self.data_dir, "settings.json")
+        self.model_config_path = os.path.join(self.data_dir, "model_config.json")
 
         # Цветовая схема
         self.colors = {
