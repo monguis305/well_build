@@ -1,9 +1,0 @@
-llama-cpp-python
-pandas
-numpy
-matplotlib
-scipy
-Pillow
-python-pptx
-openpyxl
-pyinstaller
