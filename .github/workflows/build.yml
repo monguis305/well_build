@@ -21,14 +21,10 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pyinstaller pandas openpyxl
-    
-    - name: Create facts.xlsx
-      run: python create_facts.py
-      shell: cmd
+        pip install pyinstaller
     
     - name: Build with PyInstaller
-      run: pyinstaller --onefile --windowed --name "CrabAssistant" --add-data "facts.xlsx;." crab_assistant.py
+      run: pyinstaller --onefile --windowed --name "CrabAssistant" crab_assistant.py
       shell: cmd
     
     - name: Upload artifact
