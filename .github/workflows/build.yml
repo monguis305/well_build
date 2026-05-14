@@ -1,34 +1,45 @@
-name: Build
+name: Build EXE
 
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch:
+    branches: [ main, master ]
+  workflow_dispatch:  # чтобы можно было запустить вручную
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-latest  # собираем под Windows
+
     steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-          
-      - name: Install dependencies
-        run: |
-          pip install --upgrade pip
-          pip install pyinstaller pandas numpy matplotlib scipy Pillow python-pptx openpyxl
-          pip install llama-cpp-python
-        shell: cmd
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'  # стабильная версия
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller
+        pip install numpy pandas matplotlib scipy PyQt5 openpyxl
         
-      - name: Build with PyInstaller
-        run: pyinstaller --onefile --windowed --name CrabAssistant --collect-all llama_cpp --hidden-import llama_cpp crab_assistant.py
-        shell: cmd
-        
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: CrabAssistant-Windows
-          path: dist/CrabAssistant.exe
+        # Устанавливаем xtgeo без компиляции (есть готовые колеса)
+        pip install xtgeo --only-binary=xtgeo
+
+    - name: Build EXE with PyInstaller
+      run: |
+        pyinstaller --onefile --windowed `
+          --name="MapViewer" `
+          --hidden-import=scipy.interpolate `
+          --hidden-import=scipy._lib `
+          --hidden-import=PyQt5.sip `
+          --collect-all=xtgeo `
+          map_viewer.py
+
+    - name: Upload EXE as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: MapViewer.exe
+        path: dist/MapViewer.exe
+        compression-level: 0  # без сжатия для скорости
